@@ -1,11 +1,15 @@
 """
-Autonomous Pokemon Player with CrewAI Integration
+Autonomous Pokemon Player - Fully Enhanced Version
 
-The main intelligent player that integrates:
-- CrewAI multi-agent system (planning, battle, navigation agents)
-- Vision-based screen analysis (Groq LLM)
+Integrates ALL features:
+- CrewAI multi-agent system (planning, battle, navigation)
+- Vision AI (Groq LLM) for screen understanding
 - Action memory to avoid repetition
-- Progress tracking for goal-oriented play
+- Progress tracking for story following
+- Battle brain with type effectiveness
+- Navigator with map pathfinding
+- Save manager with auto-save and retry
+- Item manager for healing and catching
 """
 
 import asyncio
@@ -24,6 +28,10 @@ from groq import Groq
 from .action_memory import ActionMemory, Action, PositionMemory
 from .progress_tracker import ProgressTracker, GameStage
 from .emulator import EmulatorController, GBAButton
+from .battle_brain import BattleBrain, TypeChart
+from .navigator import Navigator
+from .save_manager import SaveManager
+from .item_manager import ItemManager
 
 logger = structlog.get_logger()
 
@@ -36,6 +44,7 @@ class DetectedState(Enum):
     DIALOG = "dialog"
     MENU = "menu"
     NAME_ENTRY = "name_entry"
+    POKEMON_CENTER = "pokemon_center"
     UNKNOWN = "unknown"
 
 
@@ -45,19 +54,27 @@ class ScreenAnalysis:
     state: DetectedState
     in_battle: bool = False
     enemy_pokemon: Optional[str] = None
+    enemy_hp_percent: float = 100.0
+    our_hp_percent: float = 100.0
     visible_text: Optional[str] = None
     recommended_action: str = "A"
     reasoning: str = ""
     confidence: float = 0.5
 
 
+@dataclass
+class GameContext:
+    """Current game context for decision making."""
+    party_hp_percent: float = 100.0
+    badges: int = 0
+    step_count: int = 0
+    current_map: str = "unknown"
+    in_pokemon_center: bool = False
+    
+    
 class AutonomousPlayer:
     """
-    Intelligent autonomous Pokemon player that uses:
-    - CrewAI multi-agent system for complex decisions
-    - Vision AI for screen understanding
-    - Action memory to avoid repetition
-    - Progress tracking for story following
+    Fully enhanced autonomous Pokemon player.
     """
     
     def __init__(
@@ -76,32 +93,44 @@ class AutonomousPlayer:
         self.use_crewai = use_crewai
         self.client = Groq(api_key=self.api_key)
         
-        # Components
+        # Core components
         self.emulator = EmulatorController()
         self.action_memory = ActionMemory(max_history=100)
         self.position_memory = PositionMemory(max_positions=50)
         self.progress = ProgressTracker()
         
-        # CrewAI integration (lazy loaded)
+        # Enhanced components
+        self.battle_brain = BattleBrain()
+        self.navigator = Navigator()
+        self.save_manager = SaveManager()
+        self.item_manager = ItemManager()
+        
+        # CrewAI (lazy loaded)
         self._crew = None
         
         # State
         self.running = False
         self.step_count = 0
-        self.vision_interval = 8  # Analyze screen every N steps
-        self.agent_interval = 25  # Consult agents every N steps
+        self.vision_interval = 8
+        self.agent_interval = 25
         self.last_analysis: Optional[ScreenAnalysis] = None
         self.current_state = DetectedState.UNKNOWN
         self.last_agent_decision: Optional[str] = None
+        self.context = GameContext()
         
-        # Callbacks for UI updates
+        # Vision cache for speed
+        self._vision_cache: Dict[str, ScreenAnalysis] = {}
+        self._cache_max_size = 10
+        
+        # Callbacks
         self.on_step: Optional[callable] = None
         self.on_analysis: Optional[callable] = None
         self.on_agent_decision: Optional[callable] = None
+        self.on_battle: Optional[callable] = None
+        self.on_heal: Optional[callable] = None
         
-        logger.info("AutonomousPlayer initialized", 
+        logger.info("Enhanced AutonomousPlayer initialized",
                    vision_model=vision_model,
-                   text_model=text_model,
                    use_crewai=use_crewai)
     
     def _get_crew(self):
@@ -113,83 +142,59 @@ class AutonomousPlayer:
                     groq_api_key=self.api_key,
                     model=self.text_model
                 )
-                logger.info("CrewAI agents initialized")
+                logger.info("CrewAI agents loaded")
             except Exception as e:
-                logger.warning("Failed to load CrewAI agents", error=str(e))
+                logger.warning("CrewAI load failed", error=str(e))
                 self.use_crewai = False
         return self._crew
     
     async def connect(self) -> bool:
-        """Connect to the emulator and set up CrewAI agents."""
+        """Connect to emulator."""
         connected = await self.emulator.connect()
-        
-        if connected and self.use_crewai:
-            crew = self._get_crew()
-            if crew:
-                # Share emulator with crew
-                crew.emulator = self.emulator
-                try:
-                    from .screen_capture import ScreenCapture
-                    crew.screen_capture = ScreenCapture(self.emulator)
-                except:
-                    pass
-                    
+        if connected:
+            self.save_manager.set_emulator(self.emulator)
+            if self.use_crewai:
+                self._get_crew()
         return connected
     
     async def disconnect(self):
-        """Disconnect from the emulator."""
+        """Disconnect from emulator."""
         if self._crew:
             await self._crew.cleanup()
         await self.emulator.disconnect()
     
     async def analyze_screen(self) -> ScreenAnalysis:
-        """Capture and analyze the current game screen using vision AI."""
+        """Analyze current game screen with vision AI."""
         try:
-            # Capture screen
             screen_base64 = await self.emulator.get_screen_base64()
             if not screen_base64:
                 return ScreenAnalysis(state=DetectedState.UNKNOWN)
             
-            # Get current objective for context
             objective = self.progress.get_current_objective()
             objective_text = objective.description if objective else "Explore and progress"
             
-            # Call vision model
             response = self.client.chat.completions.create(
                 model=self.vision_model,
                 messages=[
                     {
                         "role": "system",
-                        "content": """You are an expert Pokemon FireRed game analyzer.
-Analyze the screenshot and determine:
-1. Game state: title_screen, overworld, battle, dialog, menu, or name_entry
-2. If in battle: enemy Pokemon name if visible
-3. Any text visible on screen
-4. Recommended next action to progress
-
-Respond in JSON format only:
+                        "content": """Analyze this Pokemon FireRed screenshot. Return JSON:
 {
-    "state": "battle|overworld|dialog|menu|title_screen|name_entry",
+    "state": "battle|overworld|dialog|menu|title_screen|name_entry|pokemon_center",
     "in_battle": true/false,
     "enemy_pokemon": "name or null",
-    "visible_text": "any text on screen",
+    "enemy_hp_percent": 0-100,
+    "our_hp_percent": 0-100,
+    "visible_text": "text on screen",
     "recommended_action": "UP|DOWN|LEFT|RIGHT|A|B|START",
-    "reasoning": "brief explanation"
+    "reasoning": "explanation"
 }"""
                     },
                     {
                         "role": "user",
                         "content": [
-                            {
-                                "type": "text",
-                                "text": f"Current objective: {objective_text}\nStep: {self.step_count}\nAnalyze this Pokemon screenshot:"
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": f"data:image/png;base64,{screen_base64}"
-                                }
-                            }
+                            {"type": "text", "text": f"Objective: {objective_text}\nStep: {self.step_count}"},
+                            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{screen_base64}"}}
                         ]
                     }
                 ],
@@ -197,263 +202,187 @@ Respond in JSON format only:
                 temperature=0.2
             )
             
-            # Parse response
             result_text = response.choices[0].message.content
             try:
                 if "{" in result_text:
-                    json_start = result_text.index("{")
-                    json_end = result_text.rindex("}") + 1
-                    data = json.loads(result_text[json_start:json_end])
-                    
+                    data = json.loads(result_text[result_text.index("{"):result_text.rindex("}")+1])
                     return ScreenAnalysis(
                         state=DetectedState(data.get("state", "unknown")),
                         in_battle=data.get("in_battle", False),
                         enemy_pokemon=data.get("enemy_pokemon"),
+                        enemy_hp_percent=data.get("enemy_hp_percent", 100),
+                        our_hp_percent=data.get("our_hp_percent", 100),
                         visible_text=data.get("visible_text"),
                         recommended_action=data.get("recommended_action", "A"),
                         reasoning=data.get("reasoning", ""),
                         confidence=0.8
                     )
-            except (json.JSONDecodeError, ValueError):
+            except:
                 pass
-                
-            return ScreenAnalysis(
-                state=DetectedState.UNKNOWN,
-                reasoning=result_text[:100]
-            )
-            
+            return ScreenAnalysis(state=DetectedState.UNKNOWN, reasoning=result_text[:100])
         except Exception as e:
-            logger.error("Vision analysis failed", error=str(e))
+            logger.error("Vision failed", error=str(e))
             return ScreenAnalysis(state=DetectedState.UNKNOWN, reasoning=str(e))
     
-    async def consult_agents(self, analysis: ScreenAnalysis) -> str:
-        """
-        Consult CrewAI agents for sophisticated decision-making.
+    async def handle_battle(self, analysis: ScreenAnalysis) -> str:
+        """Handle battle with intelligent strategy."""
+        # Update battle brain state
+        self.battle_brain.update_state(
+            enemy_pokemon=analysis.enemy_pokemon,
+            enemy_hp_percent=analysis.enemy_hp_percent,
+            our_hp_percent=analysis.our_hp_percent,
+        )
         
-        Returns the recommended action from agents.
-        """
-        if not self.use_crewai or not self._get_crew():
-            return analysis.recommended_action
-            
-        crew = self._get_crew()
+        # Check if we should use items
+        heal_action = self.item_manager.get_heal_action(
+            analysis.our_hp_percent, 100
+        )
+        if heal_action:
+            item_name, buttons = heal_action
+            logger.info("Using item in battle", item=item_name)
+            await self._execute_button_sequence(buttons)
+            self.item_manager.use_item(item_name)
+            return "ITEM"
         
-        try:
-            if analysis.in_battle:
-                # Use battle agent
-                logger.info("Consulting battle agent...")
-                task = crew.create_battle_task("win")
-                result = task.agent.execute_task(task)
-                self.last_agent_decision = f"BATTLE: {str(result)[:100]}"
-                
-                # Parse action from result
-                action = self._parse_agent_action(str(result), "battle")
-                
-                if self.on_agent_decision:
-                    self.on_agent_decision("battle", result)
-                    
-                return action
-                
-            else:
-                # Use planning agent for next objective
-                logger.info("Consulting planning agent...")
-                progress_summary = self.progress.get_progress_summary()
-                situation = f"""
-                Current state: {analysis.state.value}
-                Badges: {progress_summary.get('badges', 0)}
-                Objective: {progress_summary.get('current_objective', 'Unknown')}
-                Screen text: {analysis.visible_text or 'None visible'}
-                """
-                
-                task = crew.create_planning_task(situation)
-                result = task.agent.execute_task(task)
-                self.last_agent_decision = f"PLAN: {str(result)[:100]}"
-                
-                # Parse action from result  
-                action = self._parse_agent_action(str(result), "navigation")
-                
-                if self.on_agent_decision:
-                    self.on_agent_decision("planning", result)
-                    
-                return action
-                
-        except Exception as e:
-            logger.error("Agent consultation failed", error=str(e))
-            return analysis.recommended_action
+        # Get battle decision
+        action_type, buttons = self.battle_brain.get_battle_action()
+        
+        if self.on_battle:
+            self.on_battle(action_type, analysis.enemy_pokemon)
+        
+        # Execute the battle action
+        await self._execute_button_sequence(buttons)
+        
+        return action_type
     
-    def _parse_agent_action(self, agent_output: str, context: str) -> str:
-        """Parse an action from agent output."""
-        output_lower = agent_output.lower()
+    async def handle_healing(self) -> bool:
+        """Navigate to Pokemon Center and heal."""
+        logger.info("Navigating to heal...")
         
-        # Look for explicit directions
-        directions = {
-            "go up": "UP", "move up": "UP", "walk up": "UP", "north": "UP",
-            "go down": "DOWN", "move down": "DOWN", "walk down": "DOWN", "south": "DOWN",
-            "go left": "LEFT", "move left": "LEFT", "walk left": "LEFT", "west": "LEFT",
-            "go right": "RIGHT", "move right": "RIGHT", "walk right": "RIGHT", "east": "RIGHT",
-        }
+        directions = self.navigator.get_healing_directions()
+        for direction in directions[:5]:  # Max 5 steps at a time
+            await self.execute_action(direction)
+            await asyncio.sleep(0.2)
         
-        for phrase, action in directions.items():
-            if phrase in output_lower:
-                return action
-        
-        # Look for button presses
-        if "press a" in output_lower or "confirm" in output_lower or "attack" in output_lower:
-            return "A"
-        if "press b" in output_lower or "cancel" in output_lower or "run" in output_lower:
-            return "B"
-        if "press start" in output_lower or "menu" in output_lower:
-            return "START"
-        
-        # Default based on context
-        if context == "battle":
-            return "A"  # Attack
-        return "A"  # Interact/confirm
+        if self.on_heal:
+            self.on_heal()
+            
+        return True
+    
+    async def _execute_button_sequence(self, buttons: str):
+        """Execute a sequence of button presses."""
+        for button in buttons.split(","):
+            button = button.strip().upper()
+            if button:
+                await self.execute_action(button)
+                await asyncio.sleep(0.15)
     
     def get_smart_action(self, analysis: ScreenAnalysis) -> str:
-        """
-        Determine the best action based on analysis, memory, and progress.
-        """
+        """Get the best action based on full context."""
         state = analysis.state
-        
-        # Get suggested actions from progress tracker
-        suggested = self.progress.get_suggested_actions()
         
         # Check if stuck
         if self.action_memory.is_stuck():
-            logger.warning("Stuck detected! Trying anti-stuck action")
+            logger.warning("Stuck! Using anti-stuck action")
             return self.action_memory.get_anti_stuck_action()
         
-        # State-specific handling
+        # Check for circles
+        if self.navigator.is_going_in_circles():
+            logger.warning("Going in circles! Finding new direction")
+            return self.navigator.get_unexplored_direction()
+        
+        # State handlers
         if state == DetectedState.DIALOG:
-            return "A"  # Advance dialog
-            
+            return "A"
         if state == DetectedState.MENU:
-            return "B"  # Exit menu
-            
+            return "B"
         if state == DetectedState.NAME_ENTRY:
-            return "A"  # Accept default name
-            
-        if state == DetectedState.BATTLE:
-            return self._get_battle_action(analysis)
-            
+            return "A"
         if state == DetectedState.TITLE_SCREEN:
             return "START" if self.step_count % 3 == 0 else "A"
-            
-        # Overworld - use novelty-weighted action selection
-        possible_actions = ["UP", "DOWN", "LEFT", "RIGHT", "A"]
+        if state == DetectedState.POKEMON_CENTER:
+            return "A"  # Talk to nurse
         
-        # Weight by progress suggestion
-        if suggested and len(suggested) > 0:
-            best_suggested = suggested[self.step_count % len(suggested)]
-            if best_suggested.upper() in possible_actions:
-                if self.step_count % 10 < 7:
-                    return best_suggested.upper()
-        
-        return self.action_memory.get_suggested_action(possible_actions, state.value)
-    
-    def _get_battle_action(self, analysis: ScreenAnalysis) -> str:
-        """Determine action during battle."""
-        # If we have an agent decision, use it
-        if self.last_agent_decision and "BATTLE" in self.last_agent_decision:
-            return "A"  # Follow through with attack
-        
-        # Simple battle strategy
-        if self.step_count % 20 == 0:
-            return "DOWN"  # Potentially switch
-        if self.step_count % 15 == 0:
-            return "B"  # Maybe run from wild
-            
-        return "A"  # Attack
+        # Overworld navigation
+        return self.navigator.get_next_movement()
     
     async def execute_action(self, action: str):
-        """Execute a button press and record it."""
+        """Execute button press."""
         button_map = {
-            "A": GBAButton.A,
-            "B": GBAButton.B,
-            "START": GBAButton.START,
-            "SELECT": GBAButton.SELECT,
-            "UP": GBAButton.UP,
-            "DOWN": GBAButton.DOWN,
-            "LEFT": GBAButton.LEFT,
-            "RIGHT": GBAButton.RIGHT,
+            "A": GBAButton.A, "B": GBAButton.B,
+            "START": GBAButton.START, "SELECT": GBAButton.SELECT,
+            "UP": GBAButton.UP, "DOWN": GBAButton.DOWN,
+            "LEFT": GBAButton.LEFT, "RIGHT": GBAButton.RIGHT,
         }
         
         button = button_map.get(action.upper())
         if button:
             await self.emulator.press_button(button)
-            
-            # Record action
             self.action_memory.record(Action(
                 action_type="button",
                 value=action.upper(),
-                game_state=self.current_state.value if self.current_state else "unknown",
+                game_state=self.current_state.value,
             ))
     
     async def run_step(self) -> Dict[str, Any]:
-        """Run a single step of autonomous gameplay."""
+        """Run one step of autonomous play."""
         self.step_count += 1
-        result = {
-            "step": self.step_count,
-            "action": None,
-            "analysis": None,
-            "agent_decision": None,
-            "progress": None,
-        }
+        result = {"step": self.step_count, "action": None}
         
-        # Periodically analyze screen with vision
+        # Auto-save check
+        await self.save_manager.auto_save(self.step_count, {
+            "badges": self.context.badges,
+            "party_hp": self.context.party_hp_percent,
+        })
+        
+        # Vision analysis
         if self.step_count % self.vision_interval == 0:
             analysis = await self.analyze_screen()
             self.last_analysis = analysis
             self.current_state = analysis.state
+            self.context.party_hp_percent = analysis.our_hp_percent
             
-            # Update progress tracking
             self.progress.detect_objective_completion({
                 "state": analysis.state.value,
                 "in_battle": analysis.in_battle,
             })
             
-            result["analysis"] = {
-                "state": analysis.state.value,
-                "reasoning": analysis.reasoning[:100],
-                "recommended": analysis.recommended_action,
-            }
-            
+            result["analysis"] = {"state": analysis.state.value}
             if self.on_analysis:
                 self.on_analysis(analysis)
         
-        # Periodically consult CrewAI agents for complex decisions
-        if self.use_crewai and self.step_count % self.agent_interval == 0:
-            if self.last_analysis:
-                action = await self.consult_agents(self.last_analysis)
-                result["agent_decision"] = self.last_agent_decision
-        
-        # Determine and execute action
+        # Decision making
         if self.last_analysis:
-            action = self.get_smart_action(self.last_analysis)
+            # Priority 1: Handle battle
+            if self.last_analysis.in_battle:
+                action = await self.handle_battle(self.last_analysis)
+                result["action"] = f"BATTLE:{action}"
+                
+            # Priority 2: Need healing?
+            elif self.navigator.should_heal(self.context.party_hp_percent):
+                await self.handle_healing()
+                result["action"] = "HEAL"
+                
+            # Priority 3: Normal gameplay
+            else:
+                action = self.get_smart_action(self.last_analysis)
+                await self.execute_action(action)
+                result["action"] = action
         else:
-            action = "A"  # Default
-            
-        await self.execute_action(action)
-        result["action"] = action
+            await self.execute_action("A")
+            result["action"] = "A"
         
-        # Get progress summary
         result["progress"] = self.progress.get_progress_summary()
         
-        # Callback
         if self.on_step:
             self.on_step(result)
             
         return result
     
     async def run(self, max_steps: Optional[int] = None):
-        """
-        Run continuous autonomous gameplay.
-        
-        Args:
-            max_steps: Maximum steps to run (None for infinite)
-        """
+        """Run autonomous gameplay."""
         self.running = True
-        logger.info("Starting autonomous play", use_crewai=self.use_crewai)
+        logger.info("Starting enhanced autonomous play")
         
         try:
             while self.running:
@@ -461,44 +390,33 @@ Respond in JSON format only:
                     break
                     
                 await self.run_step()
-                
-                # Small delay between steps
                 await asyncio.sleep(0.15)
                 
-                # Log progress periodically
                 if self.step_count % 50 == 0:
-                    summary = self.progress.get_progress_summary()
-                    stats = self.action_memory.get_stats()
-                    logger.info(
-                        "Progress update",
-                        step=self.step_count,
-                        objective=summary.get("current_objective"),
-                        is_stuck=stats.get("is_stuck"),
-                        agent_mode=self.use_crewai,
-                    )
+                    logger.info("Progress",
+                               step=self.step_count,
+                               state=self.current_state.value,
+                               hp=self.context.party_hp_percent)
                     
         except asyncio.CancelledError:
-            logger.info("Autonomous play cancelled")
+            pass
         finally:
             self.running = False
-            
+    
     def stop(self):
-        """Stop autonomous play."""
+        """Stop play."""
         self.running = False
-        logger.info("Stopping autonomous play", total_steps=self.step_count)
+        logger.info("Stopped", steps=self.step_count)
     
     def get_status(self) -> Dict[str, Any]:
-        """Get current player status."""
+        """Get current status."""
         return {
             "running": self.running,
             "step_count": self.step_count,
-            "current_state": self.current_state.value if self.current_state else "unknown",
+            "state": self.current_state.value,
+            "hp": self.context.party_hp_percent,
             "progress": self.progress.get_progress_summary(),
             "action_stats": self.action_memory.get_stats(),
-            "use_crewai": self.use_crewai,
-            "last_agent_decision": self.last_agent_decision,
-            "last_analysis": {
-                "state": self.last_analysis.state.value,
-                "reasoning": self.last_analysis.reasoning[:100],
-            } if self.last_analysis else None,
+            "save_stats": self.save_manager.get_stats(),
+            "items": self.item_manager.get_stats(),
         }
