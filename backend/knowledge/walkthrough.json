@@ -1,0 +1,277 @@
+{
+    "progression": [
+        {
+            "step": 1,
+            "location": "Pallet Town",
+            "objective": "Get starter Pokemon from Prof. Oak",
+            "required_badges": 0
+        },
+        {
+            "step": 2,
+            "location": "Route 1",
+            "objective": "Travel to Viridian City",
+            "required_badges": 0
+        },
+        {
+            "step": 3,
+            "location": "Viridian City",
+            "objective": "Get Oak's Parcel from Poke Mart",
+            "required_badges": 0
+        },
+        {
+            "step": 4,
+            "location": "Pallet Town",
+            "objective": "Deliver Parcel to Prof. Oak, get Pokedex",
+            "required_badges": 0
+        },
+        {
+            "step": 5,
+            "location": "Viridian City",
+            "objective": "Stock up on Poke Balls",
+            "required_badges": 0
+        },
+        {
+            "step": 6,
+            "location": "Route 2",
+            "objective": "Travel north toward Viridian Forest",
+            "required_badges": 0
+        },
+        {
+            "step": 7,
+            "location": "Viridian Forest",
+            "objective": "Navigate through forest, catch Pikachu if possible",
+            "required_badges": 0
+        },
+        {
+            "step": 8,
+            "location": "Pewter City",
+            "objective": "Heal at Pokemon Center, prepare for gym",
+            "required_badges": 0
+        },
+        {
+            "step": 9,
+            "location": "Pewter City Gym",
+            "objective": "Defeat Brock - Use Water/Grass moves",
+            "required_badges": 0
+        },
+        {
+            "step": 10,
+            "location": "Route 3",
+            "objective": "Travel east, battle trainers",
+            "required_badges": 1
+        },
+        {
+            "step": 11,
+            "location": "Mt. Moon",
+            "objective": "Navigate through cave, get fossils",
+            "required_badges": 1
+        },
+        {
+            "step": 12,
+            "location": "Route 4",
+            "objective": "Continue to Cerulean City",
+            "required_badges": 1
+        },
+        {
+            "step": 13,
+            "location": "Cerulean City",
+            "objective": "Heal, prepare for Misty",
+            "required_badges": 1
+        },
+        {
+            "step": 14,
+            "location": "Cerulean City Gym",
+            "objective": "Defeat Misty - Use Electric/Grass moves",
+            "required_badges": 1
+        },
+        {
+            "step": 15,
+            "location": "Route 24-25",
+            "objective": "Defeat Nugget Bridge trainers, visit Bill",
+            "required_badges": 2
+        },
+        {
+            "step": 16,
+            "location": "Route 5-6",
+            "objective": "Travel south through Underground Path",
+            "required_badges": 2
+        },
+        {
+            "step": 17,
+            "location": "Vermilion City",
+            "objective": "Heal, get bike voucher if available",
+            "required_badges": 2
+        },
+        {
+            "step": 18,
+            "location": "S.S. Anne",
+            "objective": "Board ship, get HM01 Cut from Captain",
+            "required_badges": 2
+        },
+        {
+            "step": 19,
+            "location": "Vermilion City Gym",
+            "objective": "Defeat Lt. Surge - Use Ground moves",
+            "required_badges": 2
+        },
+        {
+            "step": 20,
+            "location": "Route 9-10",
+            "objective": "Travel east (need Cut), enter Rock Tunnel",
+            "required_badges": 3
+        },
+        {
+            "step": 21,
+            "location": "Rock Tunnel",
+            "objective": "Navigate dark cave (Flash helps)",
+            "required_badges": 3
+        },
+        {
+            "step": 22,
+            "location": "Lavender Town",
+            "objective": "Visit Pokemon Tower (can't complete yet)",
+            "required_badges": 3
+        },
+        {
+            "step": 23,
+            "location": "Route 8",
+            "objective": "Travel west to Celadon City",
+            "required_badges": 3
+        },
+        {
+            "step": 24,
+            "location": "Celadon City",
+            "objective": "Get Tea from old lady for Saffron gates",
+            "required_badges": 3
+        },
+        {
+            "step": 25,
+            "location": "Celadon City Gym",
+            "objective": "Defeat Erika - Use Fire/Ice/Flying moves",
+            "required_badges": 3
+        },
+        {
+            "step": 26,
+            "location": "Game Corner",
+            "objective": "Investigate Team Rocket, find Rocket Hideout",
+            "required_badges": 4
+        },
+        {
+            "step": 27,
+            "location": "Rocket Hideout",
+            "objective": "Defeat Giovanni, get Silph Scope",
+            "required_badges": 4
+        },
+        {
+            "step": 28,
+            "location": "Pokemon Tower",
+            "objective": "Rescue Mr. Fuji, get Poke Flute",
+            "required_badges": 4
+        },
+        {
+            "step": 29,
+            "location": "Route 12-15",
+            "objective": "Wake Snorlax, travel to Fuchsia City",
+            "required_badges": 4
+        },
+        {
+            "step": 30,
+            "location": "Fuchsia City",
+            "objective": "Visit Safari Zone for HM03 Surf",
+            "required_badges": 4
+        },
+        {
+            "step": 31,
+            "location": "Fuchsia City Gym",
+            "objective": "Defeat Koga - Use Ground/Psychic moves",
+            "required_badges": 4
+        },
+        {
+            "step": 32,
+            "location": "Saffron City",
+            "objective": "Enter via gate with Tea",
+            "required_badges": 5
+        },
+        {
+            "step": 33,
+            "location": "Silph Co.",
+            "objective": "Clear building, defeat Giovanni again",
+            "required_badges": 5
+        },
+        {
+            "step": 34,
+            "location": "Saffron City Gym",
+            "objective": "Defeat Sabrina - Use Bug/Ghost moves",
+            "required_badges": 5
+        },
+        {
+            "step": 35,
+            "location": "Route 19-20",
+            "objective": "Surf south to Seafoam Islands",
+            "required_badges": 6
+        },
+        {
+            "step": 36,
+            "location": "Seafoam Islands",
+            "objective": "Optional: catch Articuno",
+            "required_badges": 6
+        },
+        {
+            "step": 37,
+            "location": "Cinnabar Island",
+            "objective": "Explore Pokemon Mansion for Secret Key",
+            "required_badges": 6
+        },
+        {
+            "step": 38,
+            "location": "Cinnabar Island Gym",
+            "objective": "Defeat Blaine - Use Water/Ground moves",
+            "required_badges": 6
+        },
+        {
+            "step": 39,
+            "location": "Viridian City",
+            "objective": "Return to face final gym",
+            "required_badges": 7
+        },
+        {
+            "step": 40,
+            "location": "Viridian City Gym",
+            "objective": "Defeat Giovanni - Use Water/Grass/Ice moves",
+            "required_badges": 7
+        },
+        {
+            "step": 41,
+            "location": "Route 22-23",
+            "objective": "Travel to Victory Road",
+            "required_badges": 8
+        },
+        {
+            "step": 42,
+            "location": "Victory Road",
+            "objective": "Navigate puzzle cave",
+            "required_badges": 8
+        },
+        {
+            "step": 43,
+            "location": "Indigo Plateau",
+            "objective": "Heal and prepare for Elite Four",
+            "required_badges": 8
+        },
+        {
+            "step": 44,
+            "location": "Pokemon League",
+            "objective": "Defeat Elite Four and Champion",
+            "required_badges": 8
+        }
+    ],
+    "hm_locations": {
+        "HM01_Cut": "S.S. Anne - Captain's cabin",
+        "HM02_Fly": "Route 16 - from girl in hidden house",
+        "HM03_Surf": "Safari Zone - from man in secret house",
+        "HM04_Strength": "Fuchsia City - from Warden (give Gold Teeth)",
+        "HM05_Flash": "Route 2 - from Prof. Oak's aide (need 10 Pokemon)",
+        "HM06_Rock_Smash": "Not in FireRed",
+        "HM07_Waterfall": "Icefall Cave (post-game)"
+    }
+}

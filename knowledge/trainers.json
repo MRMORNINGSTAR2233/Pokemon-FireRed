@@ -1,0 +1,628 @@
+{
+    "gym_leaders": [
+        {
+            "order": 1,
+            "name": "Brock",
+            "city": "Pewter City",
+            "type": "Rock",
+            "badge": "Boulder Badge",
+            "pokemon": [
+                {
+                    "name": "Geodude",
+                    "level": 12,
+                    "types": [
+                        "Rock",
+                        "Ground"
+                    ]
+                },
+                {
+                    "name": "Onix",
+                    "level": 14,
+                    "types": [
+                        "Rock",
+                        "Ground"
+                    ]
+                }
+            ],
+            "strategy": "Use Water or Grass type moves. Both Pokemon are 4x weak to Water and Grass.",
+            "tm_reward": "TM39 Rock Tomb"
+        },
+        {
+            "order": 2,
+            "name": "Misty",
+            "city": "Cerulean City",
+            "type": "Water",
+            "badge": "Cascade Badge",
+            "pokemon": [
+                {
+                    "name": "Staryu",
+                    "level": 18,
+                    "types": [
+                        "Water"
+                    ]
+                },
+                {
+                    "name": "Starmie",
+                    "level": 21,
+                    "types": [
+                        "Water",
+                        "Psychic"
+                    ]
+                }
+            ],
+            "strategy": "Use Electric or Grass types. Watch out for Starmie's Psychic-type moves.",
+            "tm_reward": "TM03 Water Pulse"
+        },
+        {
+            "order": 3,
+            "name": "Lt. Surge",
+            "city": "Vermilion City",
+            "type": "Electric",
+            "badge": "Thunder Badge",
+            "pokemon": [
+                {
+                    "name": "Voltorb",
+                    "level": 21,
+                    "types": [
+                        "Electric"
+                    ]
+                },
+                {
+                    "name": "Pikachu",
+                    "level": 18,
+                    "types": [
+                        "Electric"
+                    ]
+                },
+                {
+                    "name": "Raichu",
+                    "level": 24,
+                    "types": [
+                        "Electric"
+                    ]
+                }
+            ],
+            "strategy": "Ground types are immune to Electric. Diglett from Diglett's Cave works well.",
+            "tm_reward": "TM34 Shock Wave"
+        },
+        {
+            "order": 4,
+            "name": "Erika",
+            "city": "Celadon City",
+            "type": "Grass",
+            "badge": "Rainbow Badge",
+            "pokemon": [
+                {
+                    "name": "Victreebel",
+                    "level": 29,
+                    "types": [
+                        "Grass",
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Tangela",
+                    "level": 24,
+                    "types": [
+                        "Grass"
+                    ]
+                },
+                {
+                    "name": "Vileplume",
+                    "level": 29,
+                    "types": [
+                        "Grass",
+                        "Poison"
+                    ]
+                }
+            ],
+            "strategy": "Fire, Ice, Flying, or Psychic types work well. Watch for status moves like Sleep Powder.",
+            "tm_reward": "TM19 Giga Drain"
+        },
+        {
+            "order": 5,
+            "name": "Koga",
+            "city": "Fuchsia City",
+            "type": "Poison",
+            "badge": "Soul Badge",
+            "pokemon": [
+                {
+                    "name": "Koffing",
+                    "level": 37,
+                    "types": [
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Muk",
+                    "level": 39,
+                    "types": [
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Koffing",
+                    "level": 37,
+                    "types": [
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Weezing",
+                    "level": 43,
+                    "types": [
+                        "Poison"
+                    ]
+                }
+            ],
+            "strategy": "Ground or Psychic types are effective. Bring Antidotes for poison status.",
+            "tm_reward": "TM06 Toxic"
+        },
+        {
+            "order": 6,
+            "name": "Sabrina",
+            "city": "Saffron City",
+            "type": "Psychic",
+            "badge": "Marsh Badge",
+            "pokemon": [
+                {
+                    "name": "Kadabra",
+                    "level": 38,
+                    "types": [
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Mr. Mime",
+                    "level": 37,
+                    "types": [
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Venomoth",
+                    "level": 38,
+                    "types": [
+                        "Bug",
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Alakazam",
+                    "level": 43,
+                    "types": [
+                        "Psychic"
+                    ]
+                }
+            ],
+            "strategy": "Bug, Ghost, or Dark types are super effective. High special attack makes battles fast.",
+            "tm_reward": "TM04 Calm Mind"
+        },
+        {
+            "order": 7,
+            "name": "Blaine",
+            "city": "Cinnabar Island",
+            "type": "Fire",
+            "badge": "Volcano Badge",
+            "pokemon": [
+                {
+                    "name": "Growlithe",
+                    "level": 42,
+                    "types": [
+                        "Fire"
+                    ]
+                },
+                {
+                    "name": "Ponyta",
+                    "level": 40,
+                    "types": [
+                        "Fire"
+                    ]
+                },
+                {
+                    "name": "Rapidash",
+                    "level": 42,
+                    "types": [
+                        "Fire"
+                    ]
+                },
+                {
+                    "name": "Arcanine",
+                    "level": 47,
+                    "types": [
+                        "Fire"
+                    ]
+                }
+            ],
+            "strategy": "Water, Ground, or Rock types work best. Bring strong Pokemon - Arcanine is tough.",
+            "tm_reward": "TM38 Fire Blast"
+        },
+        {
+            "order": 8,
+            "name": "Giovanni",
+            "city": "Viridian City",
+            "type": "Ground",
+            "badge": "Earth Badge",
+            "pokemon": [
+                {
+                    "name": "Rhyhorn",
+                    "level": 45,
+                    "types": [
+                        "Ground",
+                        "Rock"
+                    ]
+                },
+                {
+                    "name": "Dugtrio",
+                    "level": 42,
+                    "types": [
+                        "Ground"
+                    ]
+                },
+                {
+                    "name": "Nidoqueen",
+                    "level": 44,
+                    "types": [
+                        "Poison",
+                        "Ground"
+                    ]
+                },
+                {
+                    "name": "Nidoking",
+                    "level": 45,
+                    "types": [
+                        "Poison",
+                        "Ground"
+                    ]
+                },
+                {
+                    "name": "Rhyhorn",
+                    "level": 50,
+                    "types": [
+                        "Ground",
+                        "Rock"
+                    ]
+                }
+            ],
+            "strategy": "Water and Grass are 4x effective against Rhyhorn. Ice works on Nidos.",
+            "tm_reward": "TM26 Earthquake"
+        }
+    ],
+    "elite_four": [
+        {
+            "order": 1,
+            "name": "Lorelei",
+            "type": "Ice",
+            "pokemon": [
+                {
+                    "name": "Dewgong",
+                    "level": 52,
+                    "types": [
+                        "Water",
+                        "Ice"
+                    ]
+                },
+                {
+                    "name": "Cloyster",
+                    "level": 51,
+                    "types": [
+                        "Water",
+                        "Ice"
+                    ]
+                },
+                {
+                    "name": "Slowbro",
+                    "level": 52,
+                    "types": [
+                        "Water",
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Jynx",
+                    "level": 54,
+                    "types": [
+                        "Ice",
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Lapras",
+                    "level": 54,
+                    "types": [
+                        "Water",
+                        "Ice"
+                    ]
+                }
+            ],
+            "strategy": "Electric types are key. Fighting works on some, but watch for Psychic moves."
+        },
+        {
+            "order": 2,
+            "name": "Bruno",
+            "type": "Fighting",
+            "pokemon": [
+                {
+                    "name": "Onix",
+                    "level": 51,
+                    "types": [
+                        "Rock",
+                        "Ground"
+                    ]
+                },
+                {
+                    "name": "Hitmonchan",
+                    "level": 53,
+                    "types": [
+                        "Fighting"
+                    ]
+                },
+                {
+                    "name": "Hitmonlee",
+                    "level": 53,
+                    "types": [
+                        "Fighting"
+                    ]
+                },
+                {
+                    "name": "Onix",
+                    "level": 54,
+                    "types": [
+                        "Rock",
+                        "Ground"
+                    ]
+                },
+                {
+                    "name": "Machamp",
+                    "level": 56,
+                    "types": [
+                        "Fighting"
+                    ]
+                }
+            ],
+            "strategy": "Psychic and Flying are super effective. Water/Grass for the Onix."
+        },
+        {
+            "order": 3,
+            "name": "Agatha",
+            "type": "Ghost",
+            "pokemon": [
+                {
+                    "name": "Gengar",
+                    "level": 54,
+                    "types": [
+                        "Ghost",
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Golbat",
+                    "level": 54,
+                    "types": [
+                        "Poison",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Haunter",
+                    "level": 53,
+                    "types": [
+                        "Ghost",
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Arbok",
+                    "level": 56,
+                    "types": [
+                        "Poison"
+                    ]
+                },
+                {
+                    "name": "Gengar",
+                    "level": 58,
+                    "types": [
+                        "Ghost",
+                        "Poison"
+                    ]
+                }
+            ],
+            "strategy": "Ground, Psychic, or Dark types. Watch for Hypnosis and Dream Eater combo."
+        },
+        {
+            "order": 4,
+            "name": "Lance",
+            "type": "Dragon",
+            "pokemon": [
+                {
+                    "name": "Gyarados",
+                    "level": 56,
+                    "types": [
+                        "Water",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Dragonair",
+                    "level": 54,
+                    "types": [
+                        "Dragon"
+                    ]
+                },
+                {
+                    "name": "Dragonair",
+                    "level": 54,
+                    "types": [
+                        "Dragon"
+                    ]
+                },
+                {
+                    "name": "Aerodactyl",
+                    "level": 58,
+                    "types": [
+                        "Rock",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Dragonite",
+                    "level": 60,
+                    "types": [
+                        "Dragon",
+                        "Flying"
+                    ]
+                }
+            ],
+            "strategy": "Ice is 4x effective on Dragonite. Electric for Gyarados. Rock for Aerodactyl."
+        }
+    ],
+    "champion": {
+        "name": "Blue",
+        "pokemon_by_starter": {
+            "chose_bulbasaur": [
+                {
+                    "name": "Pidgeot",
+                    "level": 59,
+                    "types": [
+                        "Normal",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Alakazam",
+                    "level": 57,
+                    "types": [
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Rhydon",
+                    "level": 59,
+                    "types": [
+                        "Ground",
+                        "Rock"
+                    ]
+                },
+                {
+                    "name": "Arcanine",
+                    "level": 59,
+                    "types": [
+                        "Fire"
+                    ]
+                },
+                {
+                    "name": "Exeggutor",
+                    "level": 59,
+                    "types": [
+                        "Grass",
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Charizard",
+                    "level": 63,
+                    "types": [
+                        "Fire",
+                        "Flying"
+                    ]
+                }
+            ],
+            "chose_charmander": [
+                {
+                    "name": "Pidgeot",
+                    "level": 59,
+                    "types": [
+                        "Normal",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Alakazam",
+                    "level": 57,
+                    "types": [
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Rhydon",
+                    "level": 59,
+                    "types": [
+                        "Ground",
+                        "Rock"
+                    ]
+                },
+                {
+                    "name": "Gyarados",
+                    "level": 59,
+                    "types": [
+                        "Water",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Arcanine",
+                    "level": 59,
+                    "types": [
+                        "Fire"
+                    ]
+                },
+                {
+                    "name": "Blastoise",
+                    "level": 63,
+                    "types": [
+                        "Water"
+                    ]
+                }
+            ],
+            "chose_squirtle": [
+                {
+                    "name": "Pidgeot",
+                    "level": 59,
+                    "types": [
+                        "Normal",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Alakazam",
+                    "level": 57,
+                    "types": [
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Rhydon",
+                    "level": 59,
+                    "types": [
+                        "Ground",
+                        "Rock"
+                    ]
+                },
+                {
+                    "name": "Gyarados",
+                    "level": 59,
+                    "types": [
+                        "Water",
+                        "Flying"
+                    ]
+                },
+                {
+                    "name": "Exeggutor",
+                    "level": 59,
+                    "types": [
+                        "Grass",
+                        "Psychic"
+                    ]
+                },
+                {
+                    "name": "Venusaur",
+                    "level": 63,
+                    "types": [
+                        "Grass",
+                        "Poison"
+                    ]
+                }
+            ]
+        }
+    }
+}

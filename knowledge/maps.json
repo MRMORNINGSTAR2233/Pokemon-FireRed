@@ -1,0 +1,310 @@
+{
+    "maps": {
+        "pallet_town": {
+            "name": "Pallet Town",
+            "map_id": [
+                4,
+                0
+            ],
+            "connections": [
+                "route_1",
+                "route_21"
+            ],
+            "landmarks": [
+                "Player's House",
+                "Rival's House",
+                "Oak's Lab"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": false,
+            "has_pokemart": false
+        },
+        "viridian_city": {
+            "name": "Viridian City",
+            "map_id": [
+                4,
+                1
+            ],
+            "connections": [
+                "route_1",
+                "route_2",
+                "route_22"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Gym (locked until 7 badges)",
+                "Trainer School"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true
+        },
+        "pewter_city": {
+            "name": "Pewter City",
+            "map_id": [
+                4,
+                2
+            ],
+            "connections": [
+                "route_2",
+                "route_3"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Pewter Gym",
+                "Museum"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true,
+            "gym": {
+                "leader": "Brock",
+                "type": "Rock",
+                "badge": 1
+            }
+        },
+        "cerulean_city": {
+            "name": "Cerulean City",
+            "map_id": [
+                4,
+                3
+            ],
+            "connections": [
+                "route_4",
+                "route_5",
+                "route_9",
+                "route_24"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Cerulean Gym",
+                "Bike Shop"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true,
+            "gym": {
+                "leader": "Misty",
+                "type": "Water",
+                "badge": 2
+            }
+        },
+        "vermilion_city": {
+            "name": "Vermilion City",
+            "map_id": [
+                4,
+                5
+            ],
+            "connections": [
+                "route_6",
+                "route_11",
+                "s_s_anne"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Vermilion Gym",
+                "S.S. Anne dock",
+                "Pokemon Fan Club"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true,
+            "gym": {
+                "leader": "Lt. Surge",
+                "type": "Electric",
+                "badge": 3
+            }
+        },
+        "lavender_town": {
+            "name": "Lavender Town",
+            "map_id": [
+                4,
+                4
+            ],
+            "connections": [
+                "route_8",
+                "route_10",
+                "route_12"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Pokemon Tower",
+                "Name Rater"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true
+        },
+        "celadon_city": {
+            "name": "Celadon City",
+            "map_id": [
+                4,
+                6
+            ],
+            "connections": [
+                "route_7",
+                "route_16"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Department Store",
+                "Celadon Gym",
+                "Game Corner",
+                "Rocket Hideout"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true,
+            "gym": {
+                "leader": "Erika",
+                "type": "Grass",
+                "badge": 4
+            }
+        },
+        "fuchsia_city": {
+            "name": "Fuchsia City",
+            "map_id": [
+                4,
+                7
+            ],
+            "connections": [
+                "route_15",
+                "route_18",
+                "route_19"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Fuchsia Gym",
+                "Safari Zone",
+                "Warden's House"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true,
+            "gym": {
+                "leader": "Koga",
+                "type": "Poison",
+                "badge": 5
+            }
+        },
+        "saffron_city": {
+            "name": "Saffron City",
+            "map_id": [
+                4,
+                8
+            ],
+            "connections": [
+                "route_5",
+                "route_6",
+                "route_7",
+                "route_8"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Saffron Gym",
+                "Silph Co.",
+                "Fighting Dojo"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true,
+            "gym": {
+                "leader": "Sabrina",
+                "type": "Psychic",
+                "badge": 6
+            }
+        },
+        "cinnabar_island": {
+            "name": "Cinnabar Island",
+            "map_id": [
+                4,
+                9
+            ],
+            "connections": [
+                "route_20",
+                "route_21"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Cinnabar Gym",
+                "Pokemon Mansion",
+                "Pokemon Lab"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true,
+            "gym": {
+                "leader": "Blaine",
+                "type": "Fire",
+                "badge": 7
+            }
+        },
+        "indigo_plateau": {
+            "name": "Indigo Plateau",
+            "map_id": [
+                4,
+                10
+            ],
+            "connections": [
+                "route_23"
+            ],
+            "landmarks": [
+                "Pokemon Center",
+                "Poke Mart",
+                "Pokemon League"
+            ],
+            "wild_pokemon": false,
+            "has_pokecenter": true,
+            "has_pokemart": true
+        }
+    },
+    "routes_with_wild_pokemon": {
+        "route_1": [
+            "Pidgey",
+            "Rattata"
+        ],
+        "route_2": [
+            "Pidgey",
+            "Rattata",
+            "Caterpie",
+            "Weedle"
+        ],
+        "route_3": [
+            "Pidgey",
+            "Spearow",
+            "Jigglypuff",
+            "Mankey"
+        ],
+        "route_4": [
+            "Rattata",
+            "Spearow",
+            "Ekans",
+            "Sandshrew"
+        ],
+        "viridian_forest": [
+            "Caterpie",
+            "Metapod",
+            "Weedle",
+            "Kakuna",
+            "Pikachu"
+        ],
+        "mt_moon": [
+            "Zubat",
+            "Geodude",
+            "Paras",
+            "Clefairy"
+        ],
+        "digletts_cave": [
+            "Diglett",
+            "Dugtrio"
+        ]
+    }
+}
